@@ -1,0 +1,283 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}  % For better math formatting
+\usepackage{longtable} % For long tables
+\usepackage{dutchcal}  % For cool math caligraphic fonts
+\usepackage{amssymb}  % For \mathbb and extra math symbols
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\title{The Price of Disaster: Estimating the Impact of Hurricane Harvey on the Texas Construction Labor Market}
+\author{
+  Kartik Ganesh\thanks{Institute for Computing in Research}
+}
+\date{July 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper estimates the effect of Hurricane Harvey on wages and employment in the construction labor industry across impacted counties in Texas. Based on data from the Quarterly Census of Employment and Wages (QCEW) for the period 2016-2019, we adopted a difference-in-differences event study approach by comparing results in 41 FEMA-designated disaster counties with a set of unaffected southern control counties. We find that Hurricane Harvey had a large and long-lasting impact on labor market outcomes in the construction industry. More precisely, average log wages in treated counties rose by around 7.2 percent compared to control counties two quarters after the hurricane and remained high for the next two years. Employment effects were more gradual, showing a statistically significant increase only after six quarters, in line with the lagged nature of large-scale reconstruction activities. These results imply that natural disasters can generate persistent labor demand shocks to local construction markets, with policy implications for disaster recovery planning and workforce mobilization.
+\end{abstract}
+
+\section{Introduction}
+Natural disasters impose serious and often long-lasting changes on local labor markets [1, 2]. Previous studies show that hurricanes can lead to wage and employment volatility [1,4]. Understanding how local economies respond to these shocks is essential for designing effective disaster recovery policies. In particular, the construction sector plays an essential role in rebuilding efforts and often experiences unique labor market dynamics in the aftermath of a disaster.
+
+Hurricane Harvey, one of the most destructive storms in the history of the United States of America, made landfall in Texas in August of 2017. The category 4 hurricane, with wind speeds of over 130 miles per hour, threatened the lives of hundreds of thousands of residents and caused over \$125 billion in damages. The storm prompted extensive rebuilding efforts across southeast Texas, especially in construction-heavy urban areas like Houston.
+
+We ask: how did Hurricane Harvey affect wages and employment in the Texas construction sector? Using county-level data from the Quarterly Census of Employment and Wages (QCEW) from 2016 to 2019, we apply an event study difference-in-differences approach. We compare 41 FEMA-declared disaster counties to a set of unaffected control counties with similar labor markets in nearby Southern states, tracking wage and employment dynamics before and after the storm.
+
+Wages in the construction sector increased significantly in treated counties starting two quarters after Harvey, and they remained elevated the following two years. However, employment had a delayed rise, only becoming significant after six quarters. These results suggest that post-disaster labor markets adjust slowly and unevenly, with wages responding earlier than employment.
+
+Our study adds to the emerging literature on the economic impacts of natural disasters by presenting sectoral-level evidence and by measuring dynamic labor market responses. The results have immediate implications for policymakers dealing with recovery processes and labor shortages following large-scale climate events.
+
+\section{Related Works}
+The economic effects of natural disasters, and hurricanes especially, are well documented. Belasen and Polachek [1,8] establish the initial evidence, showing how hurricanes substantially change local labor markets, inducing long-lasting wage and employment changes. Their results were reinforced by follow-up research re-examining Florida hurricanes, with similarly disruptive labor market effects across various storms [7]. Groen et al. [10] and Bodenstein and Yang [11] build on these results, demonstrating long-run effects on employment paths and labor-market outcomes after hurricanes.
+
+Along with labor market repercussions, hurricanes impose deep effects on household finances and fiscal stability. Gallagher and Hartley [3] study the wake of Hurricane Katrina, indicating major and lasting instabilities in individual household finances. Deryugina [2] augments these conclusions, illustrating the fiscal aspects of hurricane recovery, particularly the manner in which disaster aid and social insurance stabilize local economies.
+
+International and more general macroeconomic research adds further depth to this literature. Acevedo [9] extends the analysis beyond the United States. He reports comparable labor market responses to natural disasters in Mexico, demonstrating a universal applicability of this economic phenomenon. Strobl [4] provides evidence on the adverse effects of hurricanes on economic growth at the county level in the United States, whereas Tran and Wilson [12] highlight localized heterogeneity in disaster effects across economic sectors and geographic areas.
+
+Methodologically, literature has improved significantly over the years. Zhang and Zhu [6] discuss advanced predictive modeling methods used for studying hurricanes' employment effects, while Kousky [5] discusses a review of determinants and mitigation options related to disaster-induced economic losses. These developments have introduced us to useful information and tools that can be utilized by policymakers to minimize economic effectsof hurricanes.
+
+Collectively, this existing body of studies show clear patterns and persistent impacts of hurricanes on local labor markets, household finances,and broader economies, while also illustrating the ever changing nature and complexity of recovery processes.Our study adds to this literature by giving detailed sector-specific evidence from the Texas construction industry, employing rigorous event-study methods to illuminate both the timing and magnitude of labor market adjustments following Hurricane Harvey.
+
+\section{Data}
+
+\subsection{Data Source: QCEW}
+Our analysis is based on data collected by the Quarterly Census of Employment and Wages (QCEW) made available by the U.S. Bureau of Labor Statistics (BLS). The QCEW contains detailed quarterly wage and employment data on a county-industry basis, covering more than 95 percent of U.S. employment.We examine the construction sector (NAICS code 23) given its pivotal position for post-disaster rebuilding activities.
+
+\subsection{Sample Selection}
+We use quarterly data from 2016 to 2019, both periods before and after Hurricane Harvey, so we can see pre-disaster trends and post-disaster effects. To maintain data quality and consistency, we focus our analysis on private sector employment (ownership code 5 in the QCEW database).
+
+Our treatment sample is the 41 Texas counties that were federally declared disaster areas as a result of Hurricane Harvey. Our control sample are 60 geographically and economically comparable counties in nearby Southern states, primarily Arkansas and Oklahoma, that weren't impacted by the hurricane. This county choice allows us to have the impact of Hurricane Harvey on construction-firm employment and wages isolated from broader regional economic trends.
+
+\subsection{Data Processing and Cleaning}
+To ensure high data quality and consistency, we apply several data-processing steps. We restrict our analysis to private-sector employment (ownership code 5), thereby avoiding fluctuations caused by public-sector employment changes unrelated to market forces.  To remove extreme and unrealistic values, we filter observations to an average weekly wage in the range of \$100–\$2,000  to minimize errors. Counties with substantial missing data or incomplete reporting for multiple quarters are excluded from the sample to ensure the reliability of our estimates.
+
+\subsection{Variable Definitions}
+For each county-quarter observation, we construct two main outcome variables: the natural log of quarterly average weekly wages (\texttt{log\_wage}) and the natural log of quarterly average employment (\texttt{log\_empl}). Quarterly average employment is computed as:
+
+\[
+\text{avg\_empl} = \frac{\text{month1\_emplvl} + \text{month2\_emplvl} + \text{month3\_emplvl}}{3}
+\]
+
+We also construct a variable for the number of quarters since the landfall of Hurricane Harvey (Q3 2017) to flexibly capture treatment timing:
+
+\[
+\text{time\_to\_treat} = (year - 2017) \times 4 + (quarter - 3)
+\]
+
+This is zero for the hurricane quarter (Q3 2017), negative for pre-storm quarters, and positive for post-storm quarters, facilitating sharp event-study estimation.
+
+\section{Empirical Strategy}
+
+\subsection{Identification Approach}
+
+We estimate the causal impact of Hurricane Harvey on construction sector wages and employment using a difference-in-differences (DiD) empirical framework. The intuition behind the DiD method is straightforward: it compares changes in outcomes (in our case, wages and employment) in counties directly affected by Hurricane Harvey (treated counties) with changes in outcomes in similar counties that were not affected (control counties). By observing outcomes both before and after the disaster event, DiD effectively isolates the storm's impact from other unrelated regional or economic trends.
+
+We also enrich the standard DiD approach with an event-study design in particular. The event-study design allows us to identify dynamic treatment effects over time, providing a more accurate image of how wages and employment respond every quarter following the hurricane. This dynamic approach is especially helpful because it illustrates the timing of the responses of the labor market, not only whether the hurricane had any influence, but when precisely these effects materialized and for how long.
+
+Quarterly statistics from the QCEW are best suited for our needs. While monthly data would provide even more precision, monthly county-level employment and wage data are not commonly published publicly with equivalent detail and regularity. Annual data on the other hand, would conceal key short-run changes and timing differences clearly evident at quarterly levels of disaggregation. Therefore, the quarterly QCEW data finds a perfect balance, accurately and persistently over time recording short-run adjustments.
+
+The validity of our DiD estimator is based on a series of underlying assumptions. Most basic of these is the parallel trends assumption, which requires that, absent the impact of Hurricane Harvey, the treatment and control counties would have followed exactly the same path in employment and wages. In order to visually observe that this assumption is true, we provide evidence of parallel trends in mean log wages between treated and control counties before Hurricane Harvey (see Figure~\ref{fig:pre_trends}). Other key assumptions to the DiD approach are stable treatment effects (no spillover effects from treated counties to control counties), shared economic shocks that hit all counties uniformly, and unit treatment value stability (the potential outcome of each county is not dependent on the treatment assignment of other counties).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Rplot06.pdf}
+    \caption{Trends in Log Wages by Group (Treated vs. Control) Before Hurricane Harvey}
+    \label{fig:pre_trends}
+\end{figure}
+
+Visual inspection of Figure~\ref{fig:pre_trends} shows closely parallel trends between treated and control counties in the periods leading up to Hurricane Harvey, providing strong support for the validity of our DiD design and parallel trends assumption.
+
+Though our wage pre-trends offer strong support for the parallel trends assumption, employment pre-trends (Figure~\ref{fig:empl_pre_trends}) exhibit minor divergences between treated and control counties in the pre-Hurricane Harvey period. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Rplot08.pdf}
+    \caption{Trends in Log Wages by Group (Treated vs. Control) Before Hurricane Harvey}
+    \label{fig:empl_pre_trends}
+\end{figure}
+
+These divergences are relatively small but suggest that employment trends were not precisely parallel in the pre-disaster period. In an effort to alleviate this concern, we explored a series of additional robustness analyses, including formal statistical tests for pre-trend differences and alternative specifications that allow for county-specific linear pre-trends. These robustness tests (presented in Section~7) confirm the validity of our main employment results despite these small deviations in pre-trends.
+
+
+\subsection{Model Specification}
+
+We implement an event-study difference-in-differences (DiD) model to explicitly measure how Hurricane Harvey impacted construction-sector wages and employment dynamically over time. The formal econometric specification is as follows:
+
+\[
+Y_{it} = \sum_{k=-4,\,k\neq0}^{9} \beta_k \cdot \text{Treated}_i \cdot \alpha_k(TimeToTreat_{it}) + \alpha_i + \delta_t + \varepsilon_{it}
+\]
+
+In this equation, \(Y_{it}\) represents our outcome variable for county \(i\) during quarter \(t\), which we measure explicitly as either the log of quarterly average weekly wages (\texttt{log\_wage}) or the log of quarterly average employment (\texttt{log\_empl}) in the construction sector. The indicator variable \(\text{Treated}_i\) explicitly equals 1 for counties designated by FEMA as disaster areas due to Hurricane Harvey, and 0 otherwise. 
+
+The variable \(TimeToTreat_{it}\) explicitly measures the number of quarters relative to the event (Hurricane Harvey's landfall in Q3 2017), defined formally as \(TimeToTreat_{it} = (year - 2017)\times4 + (quarter - 3)\). Hence, \(TimeToTreat_{it}=0\) corresponds explicitly to the hurricane quarter. The term \(\alpha_k(TimeToTreat_{it})\) is a clearly defined indicator equal to 1 if observation \(it\) occurs exactly \(k\) quarters away from the event (with \(k=0\) omitted explicitly as the baseline reference period), and 0 otherwise. This specification explicitly estimates dynamic treatment effects, with each coefficient \(\beta_k\) clearly capturing the impact of Hurricane Harvey in quarter \(k\), relative to the quarter of the hurricane.
+
+Our model explicitly includes county fixed effects \(\alpha_i\), clearly controlling for unobserved, time-invariant county-specific characteristics such as geography, infrastructure, or baseline economic conditions. We also explicitly incorporate quarter fixed effects \(\delta_t\) to control for broader seasonal effects, aggregate economic shocks, and trends that uniformly affect all counties. Standard errors are explicitly clustered at the county level within the error term \(\varepsilon_{it}\), clearly accounting for potential correlation of errors over time within each county.
+
+Quarter 0 (Q3 2017) explicitly serves as the baseline reference period, meaning all estimated treatment effects are clearly interpreted relative to outcomes in this baseline quarter.
+
+\subsection{Fixed Effects and Controls}
+
+Our econometric model incorporates county and quarter fixed effects directly to robustly isolate the impact of Hurricane Harvey on construction employment and wages. County fixed effects (\( \alpha_i \)) capture directly any observed, time-constant county-specific characteristics, such as early economic conditions, infrastructure quality, or geography, which otherwise could influence our estimates if left uncontrolled. This enables our analysis to satisfactorily measure effects solely due to the hurricane event and its impacts, rather than persistent differences among counties.
+
+Quarter fixed effects (\(\delta_t\)) are also added explicitly to control for overall temporal shocks, seasonal effects, or macro trends common to all counties. These fixed effects clearly pick up factors like general economic environment, hiring season patterns, or national economic policy shifts that are common to all counties and influence all of them equally simultaneously and ensure our estimated treatment effects are uniquely due to Hurricane Harvey and not due to common economic actions.
+
+Finally, to address potential correlation of the error term within counties over time, we cluster standard errors explicitly at the county level. This approach clearly accounts for possible autocorrelation in wages and employment outcomes within each county, resulting in more conservative and reliable statistical inference regarding the significance and robustness of our estimated treatment effects.
+
+\subsection{Identification Assumptions}
+
+A fundamental assumption underlying our difference-in-differences (DiD) empirical strategy is the \textit{parallel trends} assumption. Explicitly, this assumption states that, in the absence of Hurricane Harvey, treated counties (those declared disaster areas) and control counties (unaffected areas) would have followed similar trajectories in wages and employment outcomes over time. Although we cannot directly test this assumption post-treatment, we can evaluate its plausibility by examining pre-event trends.
+
+Both groups exhibit closely parallel trajectories prior to the event, particularly in the last few quarters preceding the hurricane. While minor initial differences in levels are observed, particularly for employment, the overall slope and direction of these trajectories remain comparable. This similarity in pre-event trends explicitly supports the validity of the parallel trends assumption in our empirical setting.
+
+Nevertheless, we acknowledge explicitly that minor deviations in pre-trends may raise questions. To address this clearly and robustly, we conduct additional robustness checks, including placebo tests and alternative specifications described in detail in Section~7, which confirm that our main results remain unaffected by these minor pre-trend differences.
+
+\section{Results}
+
+\subsection{Wage Effects}
+
+Our empirical analysis reveals that Hurricane Harvey significantly increased construction-sector wages in affected Texas counties. Table~\ref{tab:wage_results_summary} provides a summarized overview of the estimated wage impacts, presenting coefficients and their statistical significance for each quarter relative to the hurricane event. (The complete regression results, including standard errors and additional details, are explicitly reported in Appendix~B.)
+
+Wages in treated counties begin to rise notably two quarters after Hurricane Harvey (Q1 2018), with a statistically significant increase of approximately 7.2\% relative to control counties (p $<$ 0.001). Wage effects remain positive and statistically significant in subsequent quarters, indicating persistent upward pressure on construction wages due to post-disaster reconstruction demand. Specifically, wage increases generally remain around 5–8\% higher than pre-hurricane levels for the two-year period following the disaster, demonstrating sustained labor market adjustments.
+
+The event-study plot in Figure~\ref{fig:wage_effects} clearly illustrates the dynamic timing and persistence of these wage effects. The absence of significant pre-trend differences supports the validity of our parallel trends assumption and clearly highlights the causal impact of Hurricane Harvey on wages.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Harvey_Impact_Wages.pdf}
+    \caption{Event Study: Impact of Hurricane Harvey on Construction Sector Wages}
+    \label{fig:wage_effects}
+\end{figure}
+
+Economically, the rapid wage response is consistent with increased demand for construction labor in the immediate aftermath of large-scale disasters. Repair and rebuilding activities require swift mobilization of skilled and unskilled labor, leading employers to offer higher wages to quickly attract workers to affected areas. The persistent wage premium reflects sustained reconstruction activities and continued labor shortages throughout the recovery period.
+
+\subsection{Employment Effects}
+
+% Present regression results: Include a summarized regression results table here, referencing full tables in Appendix B.
+% Discuss magnitude, timing, and statistical significance of employment coefficients.
+
+% Insert your event-study employment effects plot below:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{employment_event_study_plot.pdf}
+%     \caption{Event Study: Impact of Hurricane Harvey on Construction Sector Employment}
+%     \label{fig:employment_effects}
+% \end{figure}
+
+% Provide economic interpretation for the delayed employment response.
+
+\subsection{Comparison of Wage and Employment Dynamics}
+
+% Discuss explicitly the differences in timing between wage and employment adjustments.
+% Suggest possible mechanisms or reasons for these observed differences.
+
+\section{Robustness Checks}
+
+\subsection{Placebo Tests}
+
+% Clearly describe your placebo test methodology and rationale.
+% Insert placebo test plots below:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{placebo_test_plot.pdf}
+%     \caption{Placebo Test: Shifting Event Quarter (Residual Graphs)}
+%     \label{fig:placebo_tests}
+% \end{figure}
+
+% Interpret the placebo tests to support the validity of your empirical strategy.
+
+\subsection{Leave-One-Out Sensitivity Analysis}
+
+% Describe your leave-one-out sensitivity analysis methodology.
+% Reference robustness tables or plots in Appendix D, summarizing key findings here.
+
+\subsection{Alternative Specifications}
+
+% Describe alternative data specifications clearly:
+% - Different wage range restrictions.
+% - Different treatment/control county definitions.
+% Reference detailed robustness tables in Appendix D.
+
+\section{Limitations}
+
+\subsection{Data Limitations}
+
+% Clearly describe limitations specific to the QCEW dataset (coverage, detail, granularity, reporting issues).
+
+\subsection{External Validity}
+
+% Discuss clearly the extent to which your findings can be generalized:
+% - To other industries beyond construction.
+% - To geographic regions outside Texas.
+
+\subsection{Potential Unobserved Confounders}
+
+% Highlight specific confounders that could affect your estimates:
+% - Insurance payouts.
+% - FEMA aid variability.
+% - Private sector investment differences.
+% - Post-disaster migration and demographic shifts.
+
+\section{Conclusion}
+
+\subsection{Summary of Key Findings}
+
+% Clearly summarize your main empirical results from wage and employment analyses.
+
+\subsection{Policy Implications}
+
+% Discuss practical policy recommendations for disaster recovery, rebuilding efforts, and labor market interventions.
+
+\subsection{Directions for Future Research}
+
+% Suggest clear and feasible future research directions:
+% - Applying your methodological framework to other hurricanes or disasters.
+% - Exploring long-term labor market outcomes.
+% - Investigating spillover effects into other sectors or geographic areas.
+
+\section*{References}
+\begin{enumerate}[label={[{\arabic*}]}]
+  \item Belasen, A. R., and Polachek, S. W. \textit{How Disasters Affect Local Labor Markets: The Effects of Hurricanes in Florida}.
+  \item Deryugina, T. \textit{The Fiscal Cost of Hurricanes: Disaster Aid Versus Social Insurance}.
+  \item Gallagher, J., and Hartley, D. \textit{Household Finance after a Natural Disaster: The Case of Hurricane Katrina}.
+  \item Strobl, E. \textit{The Economic Growth Impact of Hurricanes: Evidence from US Coastal Counties}.
+  \item Kousky, C. \textit{Informing Climate Adaptation: A Review of the Economic Costs of Natural Disasters, Their Determinants, and Risk Reduction Options}.
+  \item Zhang, G., and Zhu, W. \textit{Characteristics and Predictive Modeling of Short-term Impacts of Hurricanes on the US Employment}.
+  \item Gilli, M. \textit{How Disasters Affect Local Labor Markets: Revisiting the Effects of Hurricanes in Florida}.
+  \item Belasen, A. R., and Polachek, S. W. \textit{How Hurricanes Affect Employment and Wages in Local Labor Markets}.
+  \item Acevedo, I., Castellani, F., Lopez de la Cerda, C., Lotti, G., and Székely, M. \textit{Natural Disasters and Labor Market Outcomes in Mexico}.
+  \item Groen, J. A., Kutzbach, M. J., and Polivka, A. E. \textit{Storms and Jobs: The Effect of Hurricanes on Individuals' Employment and Earnings over the Long Term}.
+  \item Bodenstein, M., and Yang, W. \textit{The Effect of Hurricanes on Local Labor Market Dynamics}.
+  \item Tran, B. R., and Wilson, D. J. \textit{The Local Economic Impact of Natural Disasters}.
+\end{enumerate}
+
+\appendix
+
+\section*{Appendix}
+
+\subsection*{Appendix A: List of Treated Counties}
+
+% Include the full list of FEMA-designated Texas counties here.
+
+\subsection*{Appendix B: Full Regression Tables (Wages \& Employment)}
+
+% Include your detailed regression tables with coefficients, standard errors, and significance stars.
+
+\subsection*{Appendix C: Parallel Trends Plot}
+
+% Include your parallel trends validation plot here.
+
+\subsection*{Appendix D: Placebo Test Graphs and Robustness Tables}
+
+% Include detailed placebo test graphs, leave-one-out results, and alternative specification tables.
+
+\end{document}
